@@ -14,39 +14,41 @@
 
 </body>
 
-    <script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react@17.0.2/umd/react.development.js"></script> <!--[Q] production.min vs. development??-->
+    <script src="https://unpkg.com/prop-types@15.7.2/prop-types.js"></script>
     <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script type="text/babel">
 
         const root = document.getElementById("root");
 
-        // function Btn(props) { // props(1st argument) = {text:"Save Changes"} obj
-        function Btn({text, onClick}) {
+        function Btn({text, fontSize=10}) { // fontSize default
             return (
                 <button
-                onClick = {onClick}
                 style = {{
                     backgroundColor : "tomato",
                     color : "white",
                     padding : "10px 20px",
                     border : 0,
                     borderRadius:10,
+                    fontSize,
                 }}
-                // >{props.text}</button>
                 >{text}</button>
-            );
+            ); // "fontSize : fontSize" = "fontSize"
         }
-        const MemorizedBtn = React.memo(Btn);
+
+        Btn.propTypes = {
+            text: PropTypes.string.isRequired, //required
+            fontSize: PropTypes.number, //optional
+        };
+
         function App() {
             const [value, setValue] = React.useState("Save Changes");
             const changeValue = () => setValue("Revert Changes");
             return (
                 <div>
-                    <MemorizedBtn text={value} onClick={changeValue} /> {/*any key OK ex) banana, x etc*/}
-                    {/*custom component에서 onClick은 prop(o) eventlistner(x) -> button tag에 onClick 추가 필요
-                    + custom component tag에서 style 등등 설정 불가능 */}
-                    <MemorizedBtn text="Continue" /> {/*prop change 없을 때 rerender막아줌 - 로딩 시간 단축*/}
+                    <Btn text="Save Changes" fontSize={30}/>
+                    <Btn text={"continue"} />
                 </div>
             ); 
         }
