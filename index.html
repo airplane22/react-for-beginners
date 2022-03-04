@@ -20,106 +20,38 @@
     <script type="text/babel">
 
         const root = document.getElementById("root");
-        function MinutestoHours() {
-            const [amount, setAmount] = React.useState(0);
-            const [inverted, setInverted] = React.useState(false);
-            const onChange = (event)=> {
-                setAmount(event.target.value);
-            };
-            const reset = ()=>setAmount(0);
-            const onInvert = () => {
-                reset();
-                setInverted((current)=>!current);};
 
+        // function Btn(props) { // props(1st argument) = {text:"Save Changes"} obj
+        function Btn({text, onClick}) {
             return (
-                <div>
-                <div>
-                    <label htmlFor="minutes">Minutes</label>  
-                    <input 
-                    value={inverted ? amount*60 : amount}
-                    id="minutes" 
-                    placeholder="Minutes" 
-                    type="number"
-                    onChange={onChange}
-                    disabled={inverted}
-                    />
-                </div>
-                <div>
-    
-                    <label htmlFor="hours">Hours</label>
-                    <input 
-                    value={inverted ? amount : Math.round(amount/60)}
-                    id="hours" 
-                    placeholder="Hours" 
-                    type="number"
-                    onChange={onChange}
-                    disabled={!inverted}/>
-                </div>
-                <button onClick={reset}>Reset</button>
-                <button onClick={onInvert}>{inverted ? "turn back" : "invert"}</button>
-                </div> //for는 javascript용어이므로 htmlFor로 대체 + class=>className
+                <button
+                onClick = {onClick}
+                style = {{
+                    backgroundColor : "tomato",
+                    color : "white",
+                    padding : "10px 20px",
+                    border : 0,
+                    borderRadius:10,
+                }}
+                // >{props.text}</button>
+                >{text}</button>
             );
         }
-
-        function KmtoMiles() {
-            return (
-                <h3>KM 2 M</h3>
-            );
-
-        }
-
+        const MemorizedBtn = React.memo(Btn);
         function App() {
-            const [index, setIndex] = React.useState("xx");
-            function onSelect(event) {
-                setIndex(event.target.value);
-
-            }
+            const [value, setValue] = React.useState("Save Changes");
+            const changeValue = () => setValue("Revert Changes");
             return (
                 <div>
-                <h1>Super Converter</h1>
-                <select value={index} onChange={onSelect}>
-                    <option value="xx">Select your units</option>
-                    <option value="0">Minutes & Hours</option>
-                    <option value="1">Km & Miles</option>
-                </select>
-                <hr />
-                {index === "xx" ? "Please select your units" : null}
-                {index === "0" ? <MinutestoHours /> : null} {/*js 사용시 {}안에 작성*/}
-                {index === "1" ? <KmtoMiles /> : null}
+                    <MemorizedBtn text={value} onClick={changeValue} /> {/*any key OK ex) banana, x etc*/}
+                    {/*custom component에서 onClick은 prop(o) eventlistner(x) -> button tag에 onClick 추가 필요
+                    + custom component tag에서 style 등등 설정 불가능 */}
+                    <MemorizedBtn text="Continue" /> {/*prop change 없을 때 rerender막아줌 - 로딩 시간 단축*/}
                 </div>
-            ); // 컴포넌트를 다른 컴포넌트 안에 넣어줄 수 있음
+            ); 
         }
 
-        ReactDOM.render(<App/>, root); 
-
-/*         function Title() { 
-            return (
-            <h3 id="title" onMouseEnter={() => console.log("mouse entered")}>
-            Hello I'm a title
-            </h3>
-        );
-        }
-
-        const Button = () => (
-            <button
-            style={{
-                backgroundColor: "tomato",
-            }}
-            onClick={() => console.log("i'm clicked")}>
-            Click me
-            </button>
-        ); */
-
-        //대문자로 써야 컴포넌트 이해, 아니면 html 태그로 이해함
-
-/*         const Container = () => (
-            <div>
-                <h3>Total clicks: {counter}</h3>
-                <button onClick={countUp}>Click me</button>
-            </div>
-            );
-        render(); */
-        
+        ReactDOM.render(<App/>, root);         
     </script>
 
 </html>
